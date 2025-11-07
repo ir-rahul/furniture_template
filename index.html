@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxury Furniture AR Experience</title>
+    <!-- Model Viewer with Draco Compression Support -->
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
+    <!-- Draco Decoder for Model Compression -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/libs/draco/draco_decoder.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #ffffff;
+        color: #2d2d2d;
+        line-height: 1.6;
+      }
+
+      /* Header Navigation */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        padding: 15px 0;
+        transition: all 0.3s ease;
+      }
+
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #c49b61;
+        text-decoration: none;
+      }
+
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 40px;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: #2d2d2d;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .nav-menu a:hover {
+        color: #c49b61;
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .cart-icon,
+      .search-icon {
+        font-size: 1.2rem;
+        color: #2d2d2d;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .cart-icon:hover,
+      .search-icon:hover {
+        color: #c49b61;
+      }
+
+      /* Hero Section */
+      .hero-section {
+        margin-top: 80px;
+        position: relative;
+        background: linear-gradient(135deg, #f8f6f3 0%, #ffffff 100%);
+        overflow: hidden;
+      }
+
+      .hero-slider {
+        position: relative;
+        height: 70vh;
+        min-height: 600px;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        display: flex;
+        align-items: center;
+      }
+
+      .slide.active {
+        opacity: 1;
+      }
+
+      .slide-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 40px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+        height: 100%;
+      }
+
+      .slide-content {
+        z-index: 2;
+      }
+
+      .slide-subtitle {
+        font-size: 0.9rem;
+        color: #c49b61;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        font-weight: 500;
+      }
+
+      .slide-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 600;
+        color: #2d2d2d;
+        margin-bottom: 25px;
+        line-height: 1.2;
+      }
+
+      .slide-description {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 40px;
+        line-height: 1.7;
+        max-width: 500px;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary {
+        padding: 15px 35px;
+        background: #c49b61;
+        color: white;
+        border: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary:hover {
+        background: #b8915a;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(196, 155, 97, 0.3);
+      }
+
+      .btn-secondary {
+        padding: 15px 35px;
+        background: transparent;
+        color: #2d2d2d;
+        border: 2px solid #e5e5e5;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-secondary:hover {
+        border-color: #c49b61;
+        color: #c49b61;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .slide-image {
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slide-image img {
+        max-width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.1));
+        transition: transform 0.6s ease;
+      }
+
+      .slide-image:hover img {
+        transform: scale(1.05);
+      }
+
+      /* Slider Navigation */
+      .slider-nav {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 3;
+      }
+
+      .nav-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(196, 155, 97, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .nav-dot.active {
+        background: #c49b61;
+        transform: scale(1.2);
+      }
+
+      /* Loading States */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .loading-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid #e5e5e5;
+        border-top: 3px solid #c49b61;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+
+      .loading-text {
+        color: #c49b61;
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .loading-progress {
+        width: 200px;
+        height: 4px;
+        background: #e5e5e5;
+        border-radius: 2px;
+        margin-top: 10px;
+        overflow: hidden;
+      }
+
+      .loading-progress-bar {
+        height: 100%;
+        background: #c49b61;
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 2px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Features Section */
+      .features-section {
+        padding: 100px 0;
+        background: #ffffff;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 60px;
+      }
+
+      .feature-card {
+        text-align: center;
+        padding: 40px 20px;
+        transition: transform 0.4s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .feature-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 30px;
+        background: linear-gradient(135deg, #c49b61, #d4a574);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(196, 155, 97, 0.2);
+      }
+
+      .feature-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2d2d2d;
+        margin-bottom: 15px;
+      }
+
+      .feature-description {
+        color: #666;
+        line-height: 1.6;
+      }
+
+      /* Products Section */
+      .products-section {
+        padding: 100px 0;
+        background: #f8f6f3;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 70px;
+      }
+
+      .section-subtitle {
+        font-size: 0.9rem;
+        color: #c49b61;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        font-weight: 500;
+      }
+
+      .section-heading {
+        font-family: "Playfair Display", serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #2d2d2d;
+        margin-bottom: 20px;
+      }
+
+      .section-description {
+        font-size: 1.1rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.7;
+      }
+
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 40px;
+        margin-top: 60px;
+      }
+
+      .product-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease;
+        cursor: pointer;
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+      }
+
+      .product-image {
+        height: 280px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+      }
+
+      .product-card:hover .product-image img {
+        transform: scale(1.1);
+      }
+
+      .ar-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #c49b61;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .product-info {
+        padding: 30px;
+      }
+
+      .product-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2d2d2d;
+        margin-bottom: 10px;
+      }
+
+      .product-description {
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      .product-actions {
+        display: flex;
+        gap: 15px;
+      }
+
+      .btn-small {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+        border-radius: 4px;
+      }
+
+      /* 3D Model Section */
+      #model-section {
+        display: none;
+        padding: 100px 0;
+        background: #ffffff;
+        border-top: 1px solid #e5e5e5;
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .model-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 40px;
+        align-items: start;
+      }
+
+      .model-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #2d2d2d;
+        margin-bottom: 60px;
+        grid-column: 1 / -1;
+        text-align: center;
+      }
+
+      /* Customization Panel */
+      .customization-panel {
+        background: #f8f6f3;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 120px;
+        max-height: calc(100vh - 140px);
+        overflow-y: auto;
+      }
+
+      .panel-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2d2d2d;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .customization-group {
+        margin-bottom: 30px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .group-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2d2d2d;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .option-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+        gap: 10px;
+      }
+
+      .color-option {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        border: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .color-option.active {
+        border-color: #c49b61;
+        transform: scale(1.1);
+        box-shadow: 0 0 0 2px rgba(196, 155, 97, 0.3);
+      }
+
+      .color-beige {
+        background: #d4c5a8;
+      }
+      .color-brown {
+        background: #8b4513;
+      }
+      .color-gray {
+        background: #808080;
+      }
+      .color-navy {
+        background: #1e3a8a;
+      }
+      .color-green {
+        background: #16a34a;
+      }
+      .color-burgundy {
+        background: #7c2d12;
+      }
+
+      .size-selector {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .size-option {
+        padding: 8px 16px;
+        background: white;
+        border: 2px solid #e5e5e5;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .size-option.active {
+        background: #c49b61;
+        color: white;
+        border-color: #c49b61;
+      }
+
+      .price-display {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin-top: 20px;
+        border: 2px solid #c49b61;
+      }
+
+      .current-price {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #c49b61;
+        font-family: "Playfair Display", serif;
+      }
+
+      .price-label {
+        font-size: 0.9rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .ar-controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+      }
+
+      .ar-btn {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .ar-btn-primary {
+        background: #c49b61;
+        color: white;
+      }
+
+      .ar-btn-primary:hover {
+        background: #b8915a;
+        transform: translateY(-2px);
+      }
+
+      .ar-btn-secondary {
+        background: white;
+        color: #2d2d2d;
+        border: 2px solid #e5e5e5;
+      }
+
+      /* Model Viewer */
+      .model-viewer-container {
+        position: relative;
+      }
+
+      model-viewer {
+        width: 100%;
+        height: 600px;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        background: #f8f6f3;
+      }
+
+      /* AR overlay */
+      .ar-overlay {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 15px 20px;
+        border-radius: 10px;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 100;
+      }
+
+      .ar-overlay.active {
+        display: flex;
+      }
+
+      .ar-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: #c49b61;
+      }
+
+      .ar-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #666;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1024px) {
+        .model-container {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .customization-panel {
+          position: relative;
+          top: auto;
+          max-height: none;
+          order: -1;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-container {
+          padding: 0 20px;
+        }
+
+        .nav-menu {
+          display: none;
+        }
+
+        .slide-container {
+          grid-template-columns: 1fr;
+          gap: 40px;
+          padding: 0 20px;
+          text-align: center;
+        }
+
+        .container {
+          padding: 0 20px;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+
+        .products-grid {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        model-viewer {
+          height: 400px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loadingText">Loading 3D Model...</div>
+      <div class="loading-progress">
+        <div class="loading-progress-bar" id="loadingProgress"></div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <nav class="nav-container">
+        <a href="#" class="logo">Luxura</a>
+        <ul class="nav-menu">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-actions">
+          <span class="search-icon">🔍</span>
+          <span class="cart-icon">🛍️</span>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+      <div class="hero-slider">
+        <!-- Slide 1 - Premium Bed -->
+        <div class="slide active">
+          <div class="slide-container">
+            <div class="slide-content">
+              <div class="slide-subtitle">Luxury Collection</div>
+              <h1 class="slide-title">Experience Comfort in 3D</h1>
+              <p class="slide-description">
+                Discover our premium furniture collection with cutting-edge AR
+                technology. Visualize how each piece fits perfectly in your
+                space before making a decision.
+              </p>
+              <div class="hero-buttons">
+                <button class="btn-primary" onclick="openModelView()">
+                  Explore in 3D
+                </button>
+                <button class="btn-secondary" onclick="openAR()">
+                  Try AR View
+                </button>
+              </div>
+            </div>
+            <div class="slide-image">
+              <img
+                src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&h=400&fit=crop"
+                alt="Luxury Bedroom Set"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+          <div class="slide-container">
+            <div class="slide-content">
+              <div class="slide-subtitle">Modern Design</div>
+              <h1 class="slide-title">Crafted for Elegance</h1>
+              <p class="slide-description">
+                Each piece in our collection is meticulously designed to blend
+                comfort with sophisticated aesthetics, perfect for the modern
+                home.
+              </p>
+              <div class="hero-buttons">
+                <button class="btn-primary" onclick="openModelView()">
+                  View Collection
+                </button>
+                <button class="btn-secondary">Learn More</button>
+              </div>
+            </div>
+            <div class="slide-image">
+              <img
+                src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop"
+                alt="Modern Chair"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+          <div class="slide-container">
+            <div class="slide-content">
+              <div class="slide-subtitle">AR Technology</div>
+              <h1 class="slide-title">Future of Shopping</h1>
+              <p class="slide-description">
+                Revolutionary augmented reality experience lets you place
+                furniture in your actual space, ensuring the perfect fit every
+                time.
+              </p>
+              <div class="hero-buttons">
+                <button class="btn-primary" onclick="openAR()">
+                  Start AR Experience
+                </button>
+                <button class="btn-secondary">Watch Demo</button>
+              </div>
+            </div>
+            <div class="slide-image">
+              <img
+                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=400&fit=crop"
+                alt="Living Room"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slider Navigation -->
+      <div class="slider-nav">
+        <div class="nav-dot active" onclick="showSlide(0)"></div>
+        <div class="nav-dot" onclick="showSlide(1)"></div>
+        <div class="nav-dot" onclick="showSlide(2)"></div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3 class="feature-title">3D Visualization</h3>
+            <p class="feature-description">
+              Experience furniture from every angle with our advanced 3D
+              technology and interactive controls.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3 class="feature-title">AR Preview</h3>
+            <p class="feature-description">
+              See how furniture fits in your actual space using cutting-edge
+              augmented reality technology.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Fast Loading</h3>
+            <p class="feature-description">
+              Optimized with Draco compression for lightning-fast 3D model
+              loading on any device.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Precise Scaling</h3>
+            <p class="feature-description">
+              Accurate real-world measurements ensure perfect fit and proportion
+              in your space.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section" id="products">
+      <div class="container">
+        <div class="section-title">
+          <div class="section-subtitle">Featured Collection</div>
+          <h2 class="section-heading">Premium Furniture</h2>
+          <p class="section-description">
+            Explore our carefully curated selection of luxury furniture pieces,
+            each available with immersive 3D and AR viewing experiences.
+          </p>
+        </div>
+
+        <div class="products-grid">
+          <div class="product-card" onclick="openModelView()">
+            <div class="product-image">
+              <img
+                src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=300&fit=crop"
+                alt="Luxury Bedroom Set"
+                loading="lazy"
+              />
+              <div class="ar-badge">AR Ready</div>
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Premium Bedroom Set</h3>
+              <p class="product-description">
+                Elegant bedroom set with premium upholstery and ergonomic design
+                for ultimate comfort.
+              </p>
+              <div class="product-actions">
+                <button class="btn-primary btn-small">View in 3D</button>
+                <button class="btn-secondary btn-small">Try AR</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-image">
+              <img
+                src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop"
+                alt="Modern Chair"
+                loading="lazy"
+              />
+              <div class="ar-badge">AR Ready</div>
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Designer Armchair</h3>
+              <p class="product-description">
+                Contemporary armchair with sleek lines and luxurious comfort.
+              </p>
+              <div class="product-actions">
+                <button class="btn-primary btn-small">View in 3D</button>
+                <button class="btn-secondary btn-small">Try AR</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-image">
+              <img
+                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop"
+                alt="Coffee Table"
+                loading="lazy"
+              />
+              <div class="ar-badge">AR Ready</div>
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">Glass Coffee Table</h3>
+              <p class="product-description">
+                Modern glass-top coffee table with stylish metal frame design.
+              </p>
+              <div class="product-actions">
+                <button class="btn-primary btn-small">View in 3D</button>
+                <button class="btn-secondary btn-small">Try AR</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3D Model Section -->
+    <section id="model-section">
+      <div class="container">
+        <h2 class="model-title">Customize Your Furniture</h2>
+        <div class="model-container">
+          <!-- Customization Panel -->
+          <div class="customization-panel">
+            <h3 class="panel-title">🎨 Customization Options</h3>
+
+            <!-- Color Selection -->
+            <div class="customization-group">
+              <div class="group-title">Colors</div>
+              <div class="option-grid">
+                <div
+                  class="color-option color-beige active"
+                  data-color="beige"
+                  title="Beige"
+                ></div>
+                <div
+                  class="color-option color-brown"
+                  data-color="brown"
+                  title="Brown"
+                ></div>
+                <div
+                  class="color-option color-gray"
+                  data-color="gray"
+                  title="Gray"
+                ></div>
+                <div
+                  class="color-option color-navy"
+                  data-color="navy"
+                  title="Navy"
+                ></div>
+                <div
+                  class="color-option color-green"
+                  data-color="green"
+                  title="Green"
+                ></div>
+                <div
+                  class="color-option color-burgundy"
+                  data-color="burgundy"
+                  title="Burgundy"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Size Selection -->
+            <div class="customization-group">
+              <div class="group-title">Size</div>
+              <div class="size-selector">
+                <div class="size-option" data-size="single">Single</div>
+                <div class="size-option active" data-size="queen">Queen</div>
+                <div class="size-option" data-size="king">King</div>
+              </div>
+            </div>
+
+            <!-- Price Display -->
+            <div class="price-display">
+              <div class="price-label">Current Price</div>
+              <div class="current-price" id="currentPrice">$1,299</div>
+            </div>
+
+            <!-- AR Controls -->
+            <div class="ar-controls">
+              <button class="ar-btn ar-btn-primary" onclick="launchCustomAR()">
+                View in AR
+              </button>
+              <button
+                class="ar-btn ar-btn-secondary"
+                onclick="resetCustomization()"
+              >
+                Reset
+              </button>
+              <button
+                class="ar-btn ar-btn-secondary"
+                onclick="reloadModel()"
+                id="reloadBtn"
+                style="display: none"
+              >
+                Reload Model
+              </button>
+            </div>
+          </div>
+
+          <!-- Model Viewer Container -->
+          <div class="model-viewer-container">
+            <!-- AR Overlay -->
+            <div class="ar-overlay" id="arOverlay">
+              <div class="ar-status">
+                <span>🎯</span>
+                <span>AR Mode Active - Tap to place furniture</span>
+              </div>
+              <button class="ar-close" onclick="closeAR()">&times;</button>
+            </div>
+
+            <model-viewer
+              id="modelViewer"
+              src="Asset.glb"
+              alt="Customizable 3D furniture model"
+              auto-rotate
+              camera-controls
+              ar
+              ar-modes="scene-viewer webxr quick-look"
+              shadow-intensity="1"
+              environment-image="neutral"
+              exposure="1"
+              shadow-softness="0.25"
+              loading="eager"
+              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200'%3E%3Crect width='100%25' height='100%25' fill='%23f8f6f3'/%3E%3Ctext x='50%25' y='50%25' font-size='18' text-anchor='middle' dy='.3em' fill='%23c49b61'%3ELoading 3D Model...%3C/text%3E%3C/svg%3E"
+              ar-scale="auto"
+              ar-placement="floor"
+              interaction-prompt="auto"
+            >
+              <!-- AR button -->
+              <button
+                slot="ar-button"
+                class="ar-btn ar-btn-primary"
+                style="position: absolute; bottom: 20px; right: 20px"
+              >
+                👁️ View in AR
+              </button>
+
+              <!-- Loading progress -->
+              <div slot="progress-bar" class="progress-bar hide">
+                <div class="update-bar"></div>
+              </div>
+            </model-viewer>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // Enhanced customization state with Draco compression support
+      let customizationState = {
+        color: "beige",
+        material: "fabric",
+        size: "queen",
+        addons: [],
+        basePrice: 1299,
+        totalPrice: 1299,
+      };
+
+      // Price modifiers for bedroom furniture
+      const priceModifiers = {
+        colors: {
+          beige: 0,
+          brown: 50,
+          gray: 25,
+          navy: 75,
+          green: 60,
+          burgundy: 100,
+        },
+        sizes: {
+          single: -300,
+          queen: 0,
+          king: 450,
+        },
+      };
+
+      // Color combinations for bedroom set
+      const colorMaterials = {
+        beige: "#d4c5a8",
+        brown: "#8b4513",
+        gray: "#808080",
+        navy: "#1e3a8a",
+        green: "#16a34a",
+        burgundy: "#7c2d12",
+      };
+
+      // Enhanced loading system with Draco compression
+      function showLoadingWithProgress(text = "Loading 3D Model...") {
+        const overlay = document.getElementById("loadingOverlay");
+        const loadingText = document.getElementById("loadingText");
+        const progressBar = document.getElementById("loadingProgress");
+
+        overlay.classList.add("active");
+        loadingText.textContent = text;
+
+        // Simulate Draco decompression progress
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.random() * 15;
+          if (progress > 100) progress = 100;
+
+          progressBar.style.width = progress + "%";
+
+          if (progress < 30) {
+            loadingText.textContent = "Initializing Draco decoder...";
+          } else if (progress < 60) {
+            loadingText.textContent = "Decompressing 3D geometry...";
+          } else if (progress < 90) {
+            loadingText.textContent = "Loading textures...";
+          } else {
+            loadingText.textContent = "Finalizing model...";
+          }
+
+          if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+              hideLoading();
+            }, 500);
+          }
+        }, 100);
+      }
+
+      function hideLoading() {
+        const overlay = document.getElementById("loadingOverlay");
+        const progressBar = document.getElementById("loadingProgress");
+        overlay.classList.remove("active");
+        progressBar.style.width = "0%";
+      }
+
+      // Initialize customization with enhanced performance
+      function initializeCustomization() {
+        // Color selection
+        document.querySelectorAll(".color-option").forEach((option) => {
+          option.addEventListener("click", function () {
+            document
+              .querySelectorAll(".color-option")
+              .forEach((o) => o.classList.remove("active"));
+            this.classList.add("active");
+            customizationState.color = this.dataset.color;
+            updateModelAppearance();
+            updatePrice();
+          });
+        });
+
+        // Size selection
+        document.querySelectorAll(".size-option").forEach((option) => {
+          option.addEventListener("click", function () {
+            document
+              .querySelectorAll(".size-option")
+              .forEach((o) => o.classList.remove("active"));
+            this.classList.add("active");
+            customizationState.size = this.dataset.size;
+            updateModelScale();
+            updatePrice();
+          });
+        });
+      }
+
+      // Enhanced model update with better performance
+      function updateModelAppearance() {
+        const modelViewer = document.getElementById("modelViewer");
+
+        if (modelViewer && modelViewer.model) {
+          const color = colorMaterials[customizationState.color];
+
+          // Use efficient material updating
+          requestAnimationFrame(() => {
+            modelViewer.model.materials.forEach((material) => {
+              if (material.pbrMetallicRoughness) {
+                const rgb = hexToRgb(color);
+                material.pbrMetallicRoughness.setBaseColorFactor([
+                  rgb.r / 255,
+                  rgb.g / 255,
+                  rgb.b / 255,
+                  1.0,
+                ]);
+              }
+            });
+          });
+        }
+      }
+
+      function updateModelScale() {
+        const modelViewer = document.getElementById("modelViewer");
+        const scaleMap = {
+          single: 0.8,
+          queen: 1.0,
+          king: 1.3,
+        };
+
+        const scale = scaleMap[customizationState.size];
+        if (modelViewer) {
+          modelViewer.scale = `${scale} ${scale} ${scale}`;
+        }
+      }
+
+      // Helper function to convert hex to RGB
+      function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result
+          ? {
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+            }
+          : null;
+      }
+
+      // Enhanced price update with animation
+      function updatePrice() {
+        let totalPrice = customizationState.basePrice;
+
+        // Add color modifier
+        totalPrice += priceModifiers.colors[customizationState.color] || 0;
+
+        // Add size modifier
+        totalPrice += priceModifiers.sizes[customizationState.size] || 0;
+
+        customizationState.totalPrice = totalPrice;
+
+        // Smooth price animation
+        const priceElement = document.getElementById("currentPrice");
+        priceElement.style.transform = "scale(1.1)";
+        priceElement.style.color = "#c49b61";
+
+        setTimeout(() => {
+          priceElement.textContent = `${totalPrice.toLocaleString()}`;
+          priceElement.style.transform = "scale(1)";
+        }, 150);
+      }
+
+      // Enhanced AR launch with Draco optimization
+      function launchCustomAR() {
+        const modelViewer = document.getElementById("modelViewer");
+        showLoadingWithProgress("Preparing AR experience...");
+
+        // Apply customizations before AR
+        updateModelAppearance();
+        updateModelScale();
+
+        setTimeout(() => {
+          if (modelViewer.canActivateAR) {
+            modelViewer
+              .activateAR()
+              .then(() => {
+                hideLoading();
+                document.getElementById("arOverlay").classList.add("active");
+                console.log("AR launched with optimized Draco model");
+              })
+              .catch((error) => {
+                hideLoading();
+                console.error("AR activation failed:", error);
+                alert(
+                  "AR not supported on this device. Viewing in 3D mode instead."
+                );
+              });
+          } else {
+            hideLoading();
+            alert("AR is not supported on this device or browser.");
+          }
+        }, 1500);
+      }
+
+      function closeAR() {
+        const modelViewer = document.getElementById("modelViewer");
+        document.getElementById("arOverlay").classList.remove("active");
+
+        if (modelViewer.ar && modelViewer.ar.status === "session-started") {
+          modelViewer.ar.stop();
+        }
+      }
+
+      function resetCustomization() {
+        customizationState = {
+          color: "beige",
+          material: "fabric",
+          size: "queen",
+          addons: [],
+          basePrice: 1299,
+          totalPrice: 1299,
+        };
+
+        // Reset UI
+        document
+          .querySelectorAll(".color-option")
+          .forEach((o) => o.classList.remove("active"));
+        document.querySelector('[data-color="beige"]').classList.add("active");
+
+        document
+          .querySelectorAll(".size-option")
+          .forEach((o) => o.classList.remove("active"));
+        document.querySelector('[data-size="queen"]').classList.add("active");
+
+        updateModelAppearance();
+        updateModelScale();
+        updatePrice();
+      }
+
+      // Add reload model function
+      function reloadModel() {
+        const modelViewer = document.getElementById("modelViewer");
+        const reloadBtn = document.getElementById("reloadBtn");
+
+        showLoadingWithProgress("Reloading 3D model...");
+        reloadBtn.style.display = "none";
+
+        // Force reload by changing src
+        const currentSrc = modelViewer.src;
+        modelViewer.src = "";
+        setTimeout(() => {
+          modelViewer.src = currentSrc;
+        }, 100);
+      }
+
+      // Slider functionality with lazy loading
+      let currentSlide = 0;
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".nav-dot");
+
+      function showSlide(index) {
+        slides[currentSlide].classList.remove("active");
+        dots[currentSlide].classList.remove("active");
+
+        currentSlide = index;
+
+        slides[currentSlide].classList.add("active");
+        dots[currentSlide].classList.add("active");
+      }
+
+      // Auto-advance slider
+      setInterval(() => {
+        const nextSlide = (currentSlide + 1) % slides.length;
+        showSlide(nextSlide);
+      }, 5000);
+
+      function openModelView() {
+        showLoadingWithProgress("Loading interactive 3D model...");
+
+        setTimeout(() => {
+          const modelSection = document.getElementById("model-section");
+          modelSection.style.display = "block";
+
+          modelSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+
+          // Load model with Draco compression
+          const modelViewer = document.getElementById("modelViewer");
+          if (modelViewer.src) {
+            hideLoading();
+          }
+        }, 1000);
+      }
+
+      function openAR() {
+        const modelViewer = document.getElementById("modelViewer");
+        showLoadingWithProgress("Initializing AR...");
+
+        setTimeout(() => {
+          if (modelViewer.canActivateAR) {
+            modelViewer
+              .activateAR()
+              .then(() => {
+                hideLoading();
+              })
+              .catch((error) => {
+                hideLoading();
+                alert("AR not supported on this device or browser.");
+              });
+          } else {
+            hideLoading();
+            alert("AR is not supported on this device or browser.");
+          }
+        }, 800);
+      }
+
+      // Initialize when DOM is ready
+      document.addEventListener("DOMContentLoaded", () => {
+        const modelViewer = document.getElementById("modelViewer");
+
+        // Initialize customization
+        initializeCustomization();
+
+        // Try multiple model sources as fallbacks
+        const modelSources = ["Asset.glb"];
+
+        let currentModelIndex = 0;
+
+        function tryLoadModel() {
+          if (currentModelIndex >= modelSources.length) {
+            hideLoading();
+            alert(
+              "Unable to load 3D model. Please check your internet connection."
+            );
+            return;
+          }
+
+          modelViewer.src = modelSources[currentModelIndex];
+          console.log(
+            `Attempting to load model: ${modelSources[currentModelIndex]}`
+          );
+        }
+
+        // Enhanced model viewer event listeners
+        modelViewer.addEventListener("load", () => {
+          console.log("3D model loaded successfully");
+          hideLoading();
+
+          // Apply initial customizations
+          setTimeout(() => {
+            updateModelAppearance();
+            updateModelScale();
+          }, 100);
+        });
+
+        modelViewer.addEventListener("error", (event) => {
+          console.error("Model loading error:", event.detail);
+          currentModelIndex++;
+          if (currentModelIndex < modelSources.length) {
+            console.log("Trying fallback model...");
+            tryLoadModel();
+          } else {
+            hideLoading();
+            alert("Error loading 3D model. Please try again later.");
+          }
+        });
+
+        // Start with the first model
+        tryLoadModel();
+
+        // Progress tracking
+        modelViewer.addEventListener("progress", (event) => {
+          const progress = event.detail.totalProgress * 100;
+          const progressBar = document.getElementById("loadingProgress");
+          if (progressBar) {
+            progressBar.style.width = progress + "%";
+          }
+
+          if (progress > 0) {
+            const loadingText = document.getElementById("loadingText");
+            if (progress < 25) {
+              loadingText.textContent = "Downloading model...";
+            } else if (progress < 50) {
+              loadingText.textContent = "Processing geometry...";
+            } else if (progress < 75) {
+              loadingText.textContent = "Loading textures...";
+            } else {
+              loadingText.textContent = "Almost ready...";
+            }
+          }
+        });
+
+        // AR session handling with enhanced feedback
+        modelViewer.addEventListener("ar-status", (event) => {
+          if (event.detail.status === "session-started") {
+            console.log("AR session started successfully");
+          } else if (event.detail.status === "failed") {
+            console.log("AR session failed to start");
+            alert("AR is not supported on this device or browser");
+          }
+        });
+
+        // Intersection Observer for performance
+        const animationObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("animate-in");
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px",
+          }
+        );
+
+        // Observe elements for animation
+        document
+          .querySelectorAll(".feature-card, .product-card")
+          .forEach((el) => {
+            animationObserver.observe(el);
+          });
+      });
+
+      // Enhanced header scroll effect
+      window.addEventListener("scroll", () => {
+        const header = document.querySelector(".header");
+        if (window.scrollY > 100) {
+          header.style.background = "rgba(255, 255, 255, 0.98)";
+          header.style.boxShadow = "0 2px 20px rgba(0, 0, 0, 0.1)";
+        } else {
+          header.style.background = "rgba(255, 255, 255, 0.95)";
+          header.style.boxShadow = "none";
+        }
+      });
+
+      // Performance monitoring for Draco decompression
+      function measureDracoPerformance() {
+        if ("performance" in window) {
+          const observer = new PerformanceObserver((list) => {
+            list.getEntries().forEach((entry) => {
+              if (entry.name.includes("draco")) {
+                console.log("Draco decompression time:", entry.duration);
+              }
+            });
+          });
+          observer.observe({ entryTypes: ["measure"] });
+        }
+      }
+
+      measureDracoPerformance();
+    </script>
+  </body>
+</html>
