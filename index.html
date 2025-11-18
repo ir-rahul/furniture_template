@@ -9,8 +9,6 @@
       type="module"
       src="https://cdn.jsdelivr.net/npm/@google/model-viewer/dist/model-viewer.min.js"
     ></script>
-    <!-- Draco Decoder for Model Compression -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/libs/draco/draco_decoder.js"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap");
 
@@ -666,6 +664,7 @@
         display: flex;
         gap: 10px;
         margin-top: 25px;
+        flex-wrap: wrap;
       }
 
       .ar-btn {
@@ -679,6 +678,7 @@
         transition: all 0.3s ease;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        min-width: 120px;
       }
 
       .ar-btn-primary {
@@ -766,15 +766,119 @@
           padding: 0 20px;
         }
 
+        .logo {
+          font-size: 1.4rem;
+        }
+
         .nav-menu {
           display: none;
         }
 
+        /* Mobile Hero Section - Completely Redesigned */
+        .hero-section {
+          margin-top: 65px;
+          background: linear-gradient(180deg, #f8f6f3 0%, #ffffff 100%);
+        }
+
+        .hero-slider {
+          height: auto;
+          min-height: auto;
+        }
+
+        .slide {
+          position: static !important;
+          opacity: 1 !important;
+          display: none;
+          height: auto;
+        }
+
+        .slide.active {
+          display: block;
+        }
+
         .slide-container {
-          grid-template-columns: 1fr;
-          gap: 40px;
-          padding: 0 20px;
+          display: flex;
+          flex-direction: column-reverse;
+          gap: 0;
+          padding: 30px 20px 40px;
           text-align: center;
+          height: auto;
+          align-items: center;
+        }
+
+        .slide-content {
+          width: 100%;
+          padding-top: 20px;
+        }
+
+        .slide-image {
+          width: 100%;
+          height: 240px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px 0;
+        }
+
+        .slide-image img {
+          max-height: 220px;
+          height: auto;
+          width: auto;
+          max-width: 90%;
+          object-fit: contain;
+        }
+
+        .slide-subtitle {
+          font-size: 0.75rem;
+          margin-bottom: 8px;
+          letter-spacing: 1.5px;
+        }
+
+        .slide-title {
+          font-size: 1.75rem;
+          margin-bottom: 15px;
+          line-height: 1.3;
+        }
+
+        .slide-description {
+          font-size: 0.9rem;
+          margin: 0 auto 20px;
+          line-height: 1.6;
+          padding: 0 10px;
+        }
+
+        .hero-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          width: 100%;
+          align-items: center;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+          padding: 14px 30px;
+          font-size: 0.85rem;
+          width: 100%;
+          max-width: 300px;
+          text-align: center;
+        }
+
+        .slider-nav {
+          position: static;
+          transform: none;
+          justify-content: center;
+          padding: 20px 0 10px;
+        }
+
+        .nav-dot {
+          width: 8px;
+          height: 8px;
+        }
+
+        /* Mobile Features Section */
+        .features-section {
+          padding: 50px 0;
         }
 
         .container {
@@ -783,16 +887,156 @@
 
         .features-grid {
           grid-template-columns: 1fr;
-          gap: 40px;
+          gap: 35px;
+        }
+
+        .feature-card {
+          padding: 30px 15px;
+        }
+
+        .feature-icon {
+          width: 65px;
+          height: 65px;
+          font-size: 1.6rem;
+          margin-bottom: 20px;
+        }
+
+        .feature-title {
+          font-size: 1.15rem;
+          margin-bottom: 10px;
+        }
+
+        .feature-description {
+          font-size: 0.9rem;
+        }
+
+        /* Mobile Products Section */
+        .products-section {
+          padding: 50px 0;
+        }
+
+        .section-title {
+          margin-bottom: 40px;
+        }
+
+        .section-subtitle {
+          font-size: 0.75rem;
+          margin-bottom: 10px;
+        }
+
+        .section-heading {
+          font-size: 1.8rem;
+          margin-bottom: 12px;
+        }
+
+        .section-description {
+          font-size: 0.9rem;
+          padding: 0 10px;
         }
 
         .products-grid {
           grid-template-columns: 1fr;
-          gap: 30px;
+          gap: 25px;
+          margin-top: 30px;
         }
 
+        .product-card {
+          border-radius: 12px;
+        }
+
+        .product-image {
+          height: 220px;
+        }
+
+        .product-info {
+          padding: 20px;
+        }
+
+        .product-title {
+          font-size: 1.15rem;
+          margin-bottom: 8px;
+        }
+
+        .product-description {
+          font-size: 0.85rem;
+          margin-bottom: 15px;
+        }
+
+        .product-actions {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .btn-small {
+          width: 100%;
+          padding: 12px 20px;
+        }
+
+        /* Mobile Model Section */
         model-viewer {
           height: 400px;
+          border-radius: 8px;
+        }
+
+        .model-container {
+          gap: 20px;
+          padding: 0 20px;
+        }
+
+        .model-title {
+          font-size: 1.8rem;
+          margin-bottom: 30px;
+        }
+
+        .customization-panel {
+          padding: 20px;
+          border-radius: 8px;
+        }
+
+        .panel-title {
+          font-size: 1.1rem;
+          margin-bottom: 20px;
+        }
+
+        .customization-group {
+          margin-bottom: 20px;
+          padding-bottom: 20px;
+        }
+
+        .group-title {
+          font-size: 0.9rem;
+        }
+
+        .option-grid {
+          gap: 8px;
+        }
+
+        .color-option {
+          width: 45px;
+          height: 45px;
+        }
+
+        .size-option {
+          padding: 10px 16px;
+          font-size: 0.85rem;
+        }
+
+        .price-display {
+          padding: 18px;
+        }
+
+        .current-price {
+          font-size: 1.8rem;
+        }
+
+        .ar-controls {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .ar-btn {
+          width: 100%;
+          padding: 14px 20px;
         }
       }
     </style>
@@ -839,7 +1083,7 @@
                 space before making a decision.
               </p>
               <div class="hero-buttons">
-                <button class="btn-primary" onclick="openModelView()">
+                <button class="btn-primary" onclick="openModelView('bed')">
                   Explore in 3D
                 </button>
                 <button class="btn-secondary" onclick="openAR()">
@@ -869,7 +1113,7 @@
                 home.
               </p>
               <div class="hero-buttons">
-                <button class="btn-primary" onclick="openModelView()">
+                <button class="btn-primary" onclick="openModelView('bed')">
                   View Collection
                 </button>
                 <button class="btn-secondary">Learn More</button>
@@ -975,7 +1219,7 @@
         </div>
 
         <div class="products-grid">
-          <div class="product-card" onclick="openModelView()">
+          <div class="product-card" onclick="openModelView('bed')">
             <div class="product-image">
               <img
                 src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=300&fit=crop"
@@ -997,7 +1241,7 @@
             </div>
           </div>
 
-          <div class="product-card">
+          <div class="product-card" onclick="openModelView('armchair')">
             <div class="product-image">
               <img
                 src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop"
@@ -1009,7 +1253,8 @@
             <div class="product-info">
               <h3 class="product-title">Designer Armchair</h3>
               <p class="product-description">
-                Contemporary armchair with sleek lines and luxurious comfort.
+                Contemporary armchair with sleek lines and luxurious comfort for
+                your living space.
               </p>
               <div class="product-actions">
                 <button class="btn-primary btn-small">View in 3D</button>
@@ -1018,19 +1263,20 @@
             </div>
           </div>
 
-          <div class="product-card">
+          <div class="product-card" onclick="openModelView('sofa')">
             <div class="product-image">
               <img
                 src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop"
-                alt="Coffee Table"
+                alt="Modern Sofa"
                 loading="lazy"
               />
               <div class="ar-badge">AR Ready</div>
             </div>
             <div class="product-info">
-              <h3 class="product-title">Glass Coffee Table</h3>
+              <h3 class="product-title">Modern Sofa</h3>
               <p class="product-description">
-                Modern glass-top coffee table with stylish metal frame design.
+                Elegant modern sofa with premium fabric and contemporary design
+                for ultimate relaxation.
               </p>
               <div class="product-actions">
                 <button class="btn-primary btn-small">View in 3D</button>
@@ -1175,6 +1421,77 @@
     </section>
 
     <script>
+      // Current product category
+      let currentCategory = "bed";
+
+      // Product configurations
+      const productConfigs = {
+        bed: {
+          model: "Bed.glb",
+          name: "Premium Bedroom Set",
+          basePrice: 1299,
+          sizes: ["single", "queen", "king"],
+          defaultSize: "queen",
+          priceModifiers: {
+            colors: {
+              beige: 0,
+              brown: 50,
+              gray: 25,
+              navy: 75,
+              green: 60,
+              burgundy: 100,
+            },
+            sizes: {
+              single: -300,
+              queen: 0,
+              king: 450,
+            },
+          },
+        },
+        armchair: {
+          model: "ArmChair.glb",
+          name: "Designer Armchair",
+          basePrice: 899,
+          sizes: ["standard"],
+          defaultSize: "standard",
+          priceModifiers: {
+            colors: {
+              beige: 0,
+              brown: 40,
+              gray: 20,
+              navy: 60,
+              green: 50,
+              burgundy: 80,
+            },
+            sizes: {
+              standard: 0,
+            },
+          },
+        },
+        sofa: {
+          model: "ModernSofa.glb",
+          name: "Modern Sofa",
+          basePrice: 1899,
+          sizes: ["2-seater", "3-seater", "l-shape"],
+          defaultSize: "3-seater",
+          priceModifiers: {
+            colors: {
+              beige: 0,
+              brown: 75,
+              gray: 50,
+              navy: 100,
+              green: 85,
+              burgundy: 125,
+            },
+            sizes: {
+              "2-seater": -400,
+              "3-seater": 0,
+              "l-shape": 600,
+            },
+          },
+        },
+      };
+
       // Enhanced customization state with Draco compression support
       let customizationState = {
         color: "beige",
@@ -1183,23 +1500,6 @@
         addons: [],
         basePrice: 1299,
         totalPrice: 1299,
-      };
-
-      // Price modifiers for bedroom furniture
-      const priceModifiers = {
-        colors: {
-          beige: 0,
-          brown: 50,
-          gray: 25,
-          navy: 75,
-          green: 60,
-          burgundy: 100,
-        },
-        sizes: {
-          single: -300,
-          queen: 0,
-          king: 450,
-        },
       };
 
       // Color combinations for bedroom set
@@ -1310,13 +1610,29 @@
 
       function updateModelScale() {
         const modelViewer = document.getElementById("modelViewer");
-        const scaleMap = {
-          single: 0.8,
-          queen: 1.0,
-          king: 1.3,
-        };
+        const config = productConfigs[currentCategory];
 
-        const scale = scaleMap[customizationState.size];
+        let scale = 1.0;
+
+        // Category-specific scaling
+        if (currentCategory === "bed") {
+          const scaleMap = {
+            single: 0.8,
+            queen: 1.0,
+            king: 1.3,
+          };
+          scale = scaleMap[customizationState.size] || 1.0;
+        } else if (currentCategory === "armchair") {
+          scale = 1.0;
+        } else if (currentCategory === "sofa") {
+          const scaleMap = {
+            "2-seater": 0.85,
+            "3-seater": 1.0,
+            "l-shape": 1.2,
+          };
+          scale = scaleMap[customizationState.size] || 1.0;
+        }
+
         if (modelViewer) {
           modelViewer.scale = `${scale} ${scale} ${scale}`;
         }
@@ -1336,13 +1652,15 @@
 
       // Enhanced price update with animation
       function updatePrice() {
-        let totalPrice = customizationState.basePrice;
+        const config = productConfigs[currentCategory];
+        let totalPrice = config.basePrice;
 
         // Add color modifier
-        totalPrice += priceModifiers.colors[customizationState.color] || 0;
+        totalPrice +=
+          config.priceModifiers.colors[customizationState.color] || 0;
 
         // Add size modifier
-        totalPrice += priceModifiers.sizes[customizationState.size] || 0;
+        totalPrice += config.priceModifiers.sizes[customizationState.size] || 0;
 
         customizationState.totalPrice = totalPrice;
 
@@ -1399,13 +1717,15 @@
       }
 
       function resetCustomization() {
+        const config = productConfigs[currentCategory];
+
         customizationState = {
           color: "beige",
           material: "fabric",
-          size: "queen",
+          size: config.defaultSize,
           addons: [],
-          basePrice: 1299,
-          totalPrice: 1299,
+          basePrice: config.basePrice,
+          totalPrice: config.basePrice,
         };
 
         // Reset UI
@@ -1417,7 +1737,9 @@
         document
           .querySelectorAll(".size-option")
           .forEach((o) => o.classList.remove("active"));
-        document.querySelector('[data-size="queen"]').classList.add("active");
+        document
+          .querySelector(`[data-size="${config.defaultSize}"]`)
+          ?.classList.add("active");
 
         updateModelAppearance();
         updateModelScale();
@@ -1461,11 +1783,47 @@
         showSlide(nextSlide);
       }, 5000);
 
-      function openModelView() {
-        showLoadingWithProgress("Loading interactive 3D model...");
+      function openModelView(category = "bed") {
+        currentCategory = category;
+        const config = productConfigs[category];
+
+        showLoadingWithProgress(`Loading ${config.name}...`);
 
         setTimeout(() => {
           const modelSection = document.getElementById("model-section");
+          const modelViewer = document.getElementById("modelViewer");
+          const modelTitle = document.querySelector(".model-title");
+
+          // Update title
+          modelTitle.textContent = `Customize Your ${config.name}`;
+
+          // Update model source
+          modelViewer.src = config.model;
+
+          // Reset and update customization state
+          customizationState = {
+            color: "beige",
+            material: "fabric",
+            size: config.defaultSize,
+            addons: [],
+            basePrice: config.basePrice,
+            totalPrice: config.basePrice,
+          };
+
+          // Update size options
+          updateSizeOptions(config.sizes, config.defaultSize);
+
+          // Reset color selection
+          document
+            .querySelectorAll(".color-option")
+            .forEach((o) => o.classList.remove("active"));
+          document
+            .querySelector('[data-color="beige"]')
+            ?.classList.add("active");
+
+          // Update price display
+          updatePrice();
+
           modelSection.style.display = "block";
 
           modelSection.scrollIntoView({
@@ -1473,12 +1831,43 @@
             block: "start",
           });
 
-          // Load model with Draco compression
-          const modelViewer = document.getElementById("modelViewer");
-          if (modelViewer.src) {
-            hideLoading();
-          }
+          hideLoading();
         }, 1000);
+      }
+
+      function updateSizeOptions(sizes, defaultSize) {
+        const sizeSelector = document.querySelector(".size-selector");
+        sizeSelector.innerHTML = "";
+
+        const sizeLabels = {
+          single: "Single",
+          queen: "Queen",
+          king: "King",
+          standard: "Standard",
+          "2-seater": "2-Seater",
+          "3-seater": "3-Seater",
+          "l-shape": "L-Shape",
+        };
+
+        sizes.forEach((size) => {
+          const option = document.createElement("div");
+          option.className = "size-option";
+          if (size === defaultSize) option.classList.add("active");
+          option.dataset.size = size;
+          option.textContent = sizeLabels[size] || size;
+
+          option.addEventListener("click", function () {
+            document
+              .querySelectorAll(".size-option")
+              .forEach((o) => o.classList.remove("active"));
+            this.classList.add("active");
+            customizationState.size = this.dataset.size;
+            updateModelScale();
+            updatePrice();
+          });
+
+          sizeSelector.appendChild(option);
+        });
       }
 
       function openAR() {
@@ -1510,29 +1899,9 @@
         // Initialize customization
         initializeCustomization();
 
-        // Try multiple model sources as fallbacks
-        const modelSources = ["Bed.glb"];
-
-        let currentModelIndex = 0;
-
-        function tryLoadModel() {
-          if (currentModelIndex >= modelSources.length) {
-            hideLoading();
-            alert(
-              "Unable to load 3D model. Please check your internet connection."
-            );
-            return;
-          }
-
-          modelViewer.src = modelSources[currentModelIndex];
-          console.log(
-            `Attempting to load model: ${modelSources[currentModelIndex]}`
-          );
-        }
-
         // Enhanced model viewer event listeners
         modelViewer.addEventListener("load", () => {
-          console.log("3D model loaded successfully");
+          console.log(`3D model loaded successfully: ${currentCategory}`);
           hideLoading();
 
           // Apply initial customizations
@@ -1544,18 +1913,11 @@
 
         modelViewer.addEventListener("error", (event) => {
           console.error("Model loading error:", event.detail);
-          currentModelIndex++;
-          if (currentModelIndex < modelSources.length) {
-            console.log("Trying fallback model...");
-            tryLoadModel();
-          } else {
-            hideLoading();
-            alert("Error loading 3D model. Please try again later.");
-          }
+          hideLoading();
+          alert(
+            `Error loading 3D model: ${productConfigs[currentCategory].name}. Please check if the file exists.`
+          );
         });
-
-        // Start with the first model
-        tryLoadModel();
 
         // Progress tracking
         modelViewer.addEventListener("progress", (event) => {
